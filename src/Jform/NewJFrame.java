@@ -1,9 +1,13 @@
 package Jform;
 
 import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JFileChooser;
 
 public class NewJFrame extends javax.swing.JFrame {
+
+    Set<String> dict = new HashSet();//{"a", "strong", "kill", ""};
 
     public File selectFile() {
         JFileChooser FileChooserOpen = new JFileChooser("E:\\Programming\\TechProg\\GroupTask");
@@ -16,6 +20,28 @@ public class NewJFrame extends javax.swing.JFrame {
 
     public NewJFrame() {
         initComponents();
+    }
+
+    public String processOneString(String str) {
+        StringBuilder res = new StringBuilder(str);
+        for (String wordFromDict : dict) {
+            if (wordFromDict.length() > str.length()) {
+                continue;
+            }
+            for (int replaceIndex = res.indexOf(wordFromDict, 0); replaceIndex != -1; replaceIndex = res.indexOf(wordFromDict, replaceIndex + 7)) {
+                String separators = "!@#$%^&*():;\"\' ,\\./[]{}|-+=";
+                int endWordIndex = replaceIndex + wordFromDict.length();
+                if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1 )) {
+                        continue;
+                }
+                StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + 7); // 7 = <b></b>.length()
+                replacedStr.append("<b>");
+                replacedStr.append(wordFromDict);
+                replacedStr.append("</b>");
+                res.replace(replaceIndex, endWordIndex, replacedStr.toString());
+            }
+        }
+        return res.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -103,7 +129,11 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseTextFileActionPerformed
 
     private void ButtonChooseDictFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseDictFileActionPerformed
+        processOneString("from a to stronger kill and b b b ");
         File file = selectFile();
+        if (file == null) {
+            return;
+        }
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         } catch (FileNotFoundException e) {
@@ -139,7 +169,6 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 new NewJFrame().setVisible(true);
