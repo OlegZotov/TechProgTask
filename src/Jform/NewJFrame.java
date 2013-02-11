@@ -3,6 +3,8 @@ package Jform;
 import java.io.*;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
@@ -14,15 +16,24 @@ public class NewJFrame extends javax.swing.JFrame {
     File textFile;
     File HTMLFile;
 
-    public File selectFile() {
+    public File selectFileForOpen() {
         JFileChooser FileChooserOpen = new JFileChooser("/home/oleg");
-        int ret = FileChooserOpen.showDialog(null, "Открыть файл");
+        int ret = FileChooserOpen.showOpenDialog(this);
         if (ret == JFileChooser.APPROVE_OPTION) {
             return FileChooserOpen.getSelectedFile();
         }
         return null;
     }
 
+    public File selectFileForSaving() {
+        JFileChooser FileChooserOpen = new JFileChooser("/home/oleg");
+        int ret = FileChooserOpen.showSaveDialog(this);
+        if (ret == JFileChooser.APPROVE_OPTION) {
+            return FileChooserOpen.getSelectedFile();
+        }
+        return null;
+    }
+    
     public BufferedReader openFileForRead(File file) {
         try {
             return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -80,7 +91,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1)) {
                     continue;
                 }
-                StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + SIZE_OF_CHANGING); 
+                StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + SIZE_OF_CHANGING);
                 replacedStr.append("<b>");
                 replacedStr.append(wordFromDict);
                 replacedStr.append("</b>");
@@ -88,6 +99,39 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         }
         return res.toString();
+    }
+
+    public void mainProcess() {
+        BufferedReader bufReader = openFileForRead(textFile);
+        BufferedWriter bufWriter = openFileForWrite(HTMLFile);
+        try {
+            bufWriter.write("<html>\n<body>\n");
+            String line;
+            while ((line = bufReader.readLine()) != null) {
+                line = processOneString(line);
+                bufWriter.write(line);
+                bufWriter.newLine();
+            }
+            bufWriter.write("</html>\n</body>\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (bufReader != null) {
+                try {
+                    bufReader.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if (bufWriter != null) {
+                try {
+                    bufWriter.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
     }
 
     public NewJFrame() {
@@ -161,34 +205,37 @@ public class NewJFrame extends javax.swing.JFrame {
         CheckBoxIsRestrictOutSize.setText("Ограничить размер выходного файла");
 
         ButtonStartMainProcess.setText("Начать обработку");
+        ButtonStartMainProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonStartMainProcessActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(LabelTextFileName)
-                                .addGap(24, 24, 24)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CheckBoxIsReadyDictFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(LabelDictFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(CheckBoxIsReadyTextFile, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ButtonChooseTextFile))
-                                .addGap(18, 18, 18)
-                                .addComponent(ButtonChooseDictFile))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(CheckBoxIsRestrictOutSize, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SpinnerSizeRestriction)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SpinnerSizeRestriction, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(LabelTextFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(CheckBoxIsReadyTextFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ButtonChooseTextFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ButtonChooseDictFile)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(CheckBoxIsReadyDictFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(LabelDictFileName))))))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(CheckBoxIsReadyHTMLFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ButtonChooseHTMLFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -203,9 +250,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ButtonChooseHTMLFile)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ButtonChooseDictFile)
-                            .addComponent(ButtonChooseTextFile))
+                        .addComponent(ButtonChooseTextFile)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -213,13 +258,15 @@ public class NewJFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(CheckBoxIsReadyTextFile))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(LabelDictFileName)
-                                    .addComponent(LabelHTMLFileName))
+                                .addComponent(LabelHTMLFileName)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(CheckBoxIsReadyDictFile)
-                                    .addComponent(CheckBoxIsReadyHTMLFile))))))
+                                .addComponent(CheckBoxIsReadyHTMLFile))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ButtonChooseDictFile)
+                        .addGap(18, 18, 18)
+                        .addComponent(LabelDictFileName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(CheckBoxIsReadyDictFile)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CheckBoxIsRestrictOutSize)
@@ -234,15 +281,15 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonChooseTextFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseTextFileActionPerformed
-        if ((textFile = selectFile()) != null) {
-            LabelDictFileName.setText(textFile.getName());
+        if ((textFile = selectFileForOpen()) != null) {
+            LabelTextFileName.setText(textFile.getName());
             CheckBoxIsReadyTextFile.setSelected(true);
         }
     }//GEN-LAST:event_ButtonChooseTextFileActionPerformed
 
     private void ButtonChooseDictFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseDictFileActionPerformed
         File dictFile;
-        if ((dictFile = selectFile()) != null) {
+        if ((dictFile = selectFileForOpen()) != null) {
             if ((dict = readDict(dictFile)) != null) {
                 LabelDictFileName.setText(dictFile.getName());
                 CheckBoxIsReadyDictFile.setSelected(true);
@@ -251,11 +298,16 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseDictFileActionPerformed
 
     private void ButtonChooseHTMLFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseHTMLFileActionPerformed
-        if ((HTMLFile = selectFile()) != null) {
-            LabelDictFileName.setText(HTMLFile.getName());
+        if ((HTMLFile = selectFileForSaving()) != null) {
+            LabelHTMLFileName.setText(HTMLFile.getName());
             CheckBoxIsReadyHTMLFile.setSelected(true);
         }
     }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
+
+    private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
+        mainProcess();
+        JOptionPane.showMessageDialog(null, "done!");
+    }//GEN-LAST:event_ButtonStartMainProcessActionPerformed
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -292,7 +344,6 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonChooseDictFile;
     private javax.swing.JButton ButtonChooseHTMLFile;

@@ -23,36 +23,33 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="CheckBoxIsRestrictOutSize" min="-2" pref="303" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="SpinnerSizeRestriction" min="-2" pref="123" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="LabelTextFileName" max="32767" attributes="0"/>
+                          <Component id="CheckBoxIsReadyTextFile" max="32767" attributes="0"/>
+                          <Component id="ButtonChooseTextFile" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="LabelTextFileName" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ButtonChooseDictFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="CheckBoxIsReadyDictFile" max="32767" attributes="0"/>
-                                  <Component id="LabelDictFileName" max="32767" attributes="0"/>
+                                  <Component id="LabelDictFileName" min="-2" max="-2" attributes="0"/>
                               </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="CheckBoxIsReadyTextFile" min="-2" pref="184" max="-2" attributes="0"/>
-                                  <Component id="ButtonChooseTextFile" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Component id="ButtonChooseDictFile" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="CheckBoxIsRestrictOutSize" min="-2" pref="303" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="SpinnerSizeRestriction" max="32767" attributes="0"/>
-                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="CheckBoxIsReadyHTMLFile" max="32767" attributes="0"/>
                   <Component id="ButtonChooseHTMLFile" alignment="0" max="32767" attributes="0"/>
@@ -70,10 +67,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="ButtonChooseHTMLFile" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="ButtonChooseDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ButtonChooseTextFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="ButtonChooseTextFile" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
@@ -82,17 +76,18 @@
                               <Component id="CheckBoxIsReadyTextFile" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="LabelDictFileName" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="LabelHTMLFileName" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="LabelHTMLFileName" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="CheckBoxIsReadyDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="CheckBoxIsReadyHTMLFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="CheckBoxIsReadyHTMLFile" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="ButtonChooseDictFile" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="LabelDictFileName" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="CheckBoxIsReadyDictFile" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -178,6 +173,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x41d;&#x430;&#x447;&#x430;&#x442;&#x44c; &#x43e;&#x431;&#x440;&#x430;&#x431;&#x43e;&#x442;&#x43a;&#x443;"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonStartMainProcessActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
