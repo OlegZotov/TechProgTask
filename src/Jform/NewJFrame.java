@@ -33,7 +33,7 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         return null;
     }
-    
+
     public BufferedReader openFileForRead(File file) {
         try {
             return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -132,6 +132,56 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         }
 
+    }
+
+    public void mainProcess(int sizeRestriction) {
+        BufferedReader bufReader = openFileForRead(textFile);
+        BufferedWriter bufWriter = openFileForWrite(HTMLFile);
+        int counter = 0;
+        try {
+            bufWriter.write("<html>\n<body>\n");
+            String line;
+            while ((line = bufReader.readLine()) != null) {
+                line = processOneString(line);
+                bufWriter.write(line);
+                bufWriter.newLine();
+                counter++;
+                if (counter >= sizeRestriction) {
+                    counter = 0;
+                    bufWriter.write("</html>\n</body>\n");
+                    if (bufWriter != null) {
+                        try {
+                            bufWriter.close();
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    HTMLFile = null;
+                    if ((HTMLFile = selectFileForSaving()) != null) {
+                        bufWriter = openFileForWrite(HTMLFile);
+                        bufWriter.write("<html>\n<body>\n");
+                    }
+                }
+            }
+            bufWriter.write("</html>\n</body>\n");
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (bufReader != null) {
+                try {
+                    bufReader.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            if (bufWriter != null) {
+                try {
+                    bufWriter.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
     }
 
     public NewJFrame() {
@@ -305,7 +355,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
 
     private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
-        mainProcess();
+        mainProcess(4);
         JOptionPane.showMessageDialog(null, "done!");
     }//GEN-LAST:event_ButtonStartMainProcessActionPerformed
 
