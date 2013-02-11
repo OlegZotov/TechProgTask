@@ -54,9 +54,10 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="CheckBoxIsReadyHMTLFile" max="32767" attributes="0"/>
+                  <Component id="CheckBoxIsReadyHTMLFile" max="32767" attributes="0"/>
                   <Component id="ButtonChooseHTMLFile" alignment="0" max="32767" attributes="0"/>
                   <Component id="LabelHTMLFileName" alignment="0" max="32767" attributes="0"/>
+                  <Component id="ButtonStartMainProcess" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -88,7 +89,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="CheckBoxIsReadyDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="CheckBoxIsReadyHMTLFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CheckBoxIsReadyHTMLFile" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -98,8 +99,9 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="CheckBoxIsRestrictOutSize" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="SpinnerSizeRestriction" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ButtonStartMainProcess" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="179" max="32767" attributes="0"/>
+              <EmptySpace pref="177" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -156,7 +158,7 @@
         <BindingProperty name="enabled" source="CheckBoxIsRestrictOutSize" sourcePath="${selected}" target="SpinnerSizeRestriction" targetPath="enabled" updateStrategy="0" immediately="false"/>
       </BindingProperties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="CheckBoxIsReadyHMTLFile">
+    <Component class="javax.swing.JCheckBox" name="CheckBoxIsReadyHTMLFile">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x413;&#x43e;&#x442;&#x43e;&#x432;&#x43d;&#x43e;&#x441;&#x442;&#x44c; &#x43a; &#x43e;&#x431;&#x440;&#x430;&#x431;&#x43e;&#x442;&#x43a;&#x435;"/>
         <Property name="enabled" type="boolean" value="false"/>
@@ -170,6 +172,11 @@
     <Component class="javax.swing.JCheckBox" name="CheckBoxIsRestrictOutSize">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x41e;&#x433;&#x440;&#x430;&#x43d;&#x438;&#x447;&#x438;&#x442;&#x44c; &#x440;&#x430;&#x437;&#x43c;&#x435;&#x440; &#x432;&#x44b;&#x445;&#x43e;&#x434;&#x43d;&#x43e;&#x433;&#x43e; &#x444;&#x430;&#x439;&#x43b;&#x430;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="ButtonStartMainProcess">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x41d;&#x430;&#x447;&#x430;&#x442;&#x44c; &#x43e;&#x431;&#x440;&#x430;&#x431;&#x43e;&#x442;&#x43a;&#x443;"/>
       </Properties>
     </Component>
   </SubComponents>
