@@ -52,6 +52,26 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }
 
+    public void closeReadStream(BufferedReader bufReader) {
+        if (bufReader != null) {
+            try {
+                bufReader.close();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public void closeWriteStream(BufferedWriter bufWriter) {
+        if (bufWriter != null) {
+            try {
+                bufWriter.close();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     public Set<String> readDict(File dictFile) {
         Set<String> dictionary = new TreeSet<String>();
         BufferedReader bufReader;
@@ -64,13 +84,7 @@ public class NewJFrame extends javax.swing.JFrame {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
             } finally {
-                if (bufReader != null) {
-                    try {
-                        bufReader.close();
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+                closeReadStream(bufReader);
             }
             return dictionary;
         } else {
@@ -149,13 +163,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 if (counter >= sizeRestriction) {
                     counter = 0;
                     bufWriter.write("</html>\n</body>\n");
-                    if (bufWriter != null) {
-                        try {
-                            bufWriter.close();
-                        } catch (IOException ex) {
-                            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                    closeWriteStream(bufWriter);
                     HTMLFile = null;
                     if ((HTMLFile = selectFileForSaving()) != null) {
                         bufWriter = openFileForWrite(HTMLFile);
@@ -167,29 +175,17 @@ public class NewJFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
         } finally {
-            if (bufReader != null) {
-                try {
-                    bufReader.close();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            if (bufWriter != null) {
-                try {
-                    bufWriter.close();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            closeReadStream(bufReader);
+            closeWriteStream(bufWriter);
         }
     }
 
     public NewJFrame() {
         initComponents();
-        SpinnerModel model = new SpinnerNumberModel(100, //initial value
-                100, //min
-                10000, //max
-                100);
+        SpinnerModel model = new SpinnerNumberModel(10, //initial value
+                10, //min
+                100000, //max
+                10);
         SpinnerSizeRestriction.setModel(model);
     }
 
@@ -355,7 +351,11 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
 
     private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
-        mainProcess(4);
+        if (CheckBoxIsRestrictOutSize.isSelected()) {
+            mainProcess(Integer.valueOf(SpinnerSizeRestriction.getValue().toString()));
+        } else {
+            mainProcess();
+        }
         JOptionPane.showMessageDialog(null, "done!");
     }//GEN-LAST:event_ButtonStartMainProcessActionPerformed
 
