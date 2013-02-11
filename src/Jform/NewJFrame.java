@@ -11,7 +11,7 @@ public class NewJFrame extends javax.swing.JFrame {
     Set<String> dict = new TreeSet();//{"a", "strong", "kill", ""};
 
     public File selectFile() {
-        JFileChooser FileChooserOpen = new JFileChooser("E:\\Programming\\TechProg\\GroupTask");
+        JFileChooser FileChooserOpen = new JFileChooser("/home/oleg");
         int ret = FileChooserOpen.showDialog(null, "Открыть файл");
         if (ret == JFileChooser.APPROVE_OPTION) {
             return FileChooserOpen.getSelectedFile();
@@ -46,10 +46,6 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }
 
-    public NewJFrame() {
-        initComponents();
-    }
-
     public String processOneString(String str) {
         StringBuilder res = new StringBuilder(str);
         for (String wordFromDict : dict) {
@@ -59,8 +55,8 @@ public class NewJFrame extends javax.swing.JFrame {
             for (int replaceIndex = res.indexOf(wordFromDict, 0); replaceIndex != -1; replaceIndex = res.indexOf(wordFromDict, replaceIndex + 7)) {
                 String separators = "!@#$%^&*():;\"\' ,\\./[]{}|-+=";
                 int endWordIndex = replaceIndex + wordFromDict.length();
-                if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1 )) {
-                        continue;
+                if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1)) {
+                    continue;
                 }
                 StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + 7); // 7 = <b></b>.length()
                 replacedStr.append("<b>");
@@ -70,6 +66,10 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         }
         return res.toString();
+    }
+
+    public NewJFrame() {
+        initComponents();
     }
 
     @SuppressWarnings("unchecked")
@@ -157,17 +157,15 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseTextFileActionPerformed
 
     private void ButtonChooseDictFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseDictFileActionPerformed
-        processOneString("from a to stronger kill and b b b ");
-        File file = selectFile();
-        if (file == null) {
-            return;
-        }
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        File dictFile;
+        if ((dictFile = selectFile()) != null) {
+            if ((dict = readDict(dictFile)) != null) {
+                LabelDictFileName.setText(dictFile.getName());
+                CheckBoxIsReadyDictFile.setSelected(true);
+            }
         }
     }//GEN-LAST:event_ButtonChooseDictFileActionPerformed
+
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*
