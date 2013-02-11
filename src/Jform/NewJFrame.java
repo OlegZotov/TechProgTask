@@ -1,13 +1,14 @@
 package Jform;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class NewJFrame extends javax.swing.JFrame {
 
-    Set<String> dict = new HashSet();//{"a", "strong", "kill", ""};
+    Set<String> dict = new TreeSet();//{"a", "strong", "kill", ""};
 
     public File selectFile() {
         JFileChooser FileChooserOpen = new JFileChooser("E:\\Programming\\TechProg\\GroupTask");
@@ -16,6 +17,33 @@ public class NewJFrame extends javax.swing.JFrame {
             return FileChooserOpen.getSelectedFile();
         }
         return null;
+    }
+
+    public BufferedReader tryOpenFile(File file) {
+        try {
+            return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
+    public Set<String> readDict(File dictFile) {
+        Set<String> dictionary = new TreeSet<String>();
+        BufferedReader bufReader;
+        if ((bufReader = tryOpenFile(dictFile)) != null) {
+            String line;
+            try {
+                while ((line = bufReader.readLine()) != null) {
+                    dictionary.add(line);
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+            }
+            return dictionary;
+        } else {
+            return null;
+        }
     }
 
     public NewJFrame() {
