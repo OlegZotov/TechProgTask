@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -22,28 +22,41 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="LabelTextFileName" max="32767" attributes="0"/>
-                      <Component id="CheckBoxIsReadyTextFile" pref="0" max="32767" attributes="0"/>
-                  </Group>
-                  <Component id="ButtonChooseTextFile" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="ButtonChooseDictFile" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="CheckBoxIsReadyDictFile" max="32767" attributes="0"/>
-                          <Component id="LabelDictFileName" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="LabelTextFileName" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="CheckBoxIsReadyDictFile" max="32767" attributes="0"/>
+                                  <Component id="LabelDictFileName" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="CheckBoxIsReadyTextFile" min="-2" pref="184" max="-2" attributes="0"/>
+                                  <Component id="ButtonChooseTextFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Component id="ButtonChooseDictFile" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="CheckBoxIsRestrictOutSize" min="-2" pref="303" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="SpinnerSizeRestriction" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="CheckBoxIsReadyHMTLFile" max="32767" attributes="0"/>
+                  <Component id="ButtonChooseHTMLFile" alignment="0" max="32767" attributes="0"/>
+                  <Component id="LabelHTMLFileName" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -53,21 +66,40 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="ButtonChooseDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ButtonChooseTextFile" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="ButtonChooseHTMLFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ButtonChooseDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ButtonChooseTextFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="LabelTextFileName" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="CheckBoxIsReadyTextFile" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="LabelDictFileName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="LabelHTMLFileName" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="CheckBoxIsReadyDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CheckBoxIsReadyHMTLFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="LabelTextFileName" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="LabelDictFileName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CheckBoxIsRestrictOutSize" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="SpinnerSizeRestriction" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="CheckBoxIsReadyTextFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="CheckBoxIsReadyDictFile" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="78" max="32767" attributes="0"/>
+              <EmptySpace pref="179" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -110,6 +142,35 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonChooseTextFileActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="ButtonChooseHTMLFile">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x412;&#x44b;&#x431;&#x440;&#x430;&#x442;&#x44c; &#x432;&#x44b;&#x445;&#x43e;&#x434;&#x43d;&#x43e;&#x439; &#x444;&#x430;&#x439;&#x43b;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonChooseHTMLFileActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="SpinnerSizeRestriction">
+      <BindingProperties>
+        <BindingProperty name="enabled" source="CheckBoxIsRestrictOutSize" sourcePath="${selected}" target="SpinnerSizeRestriction" targetPath="enabled" updateStrategy="0" immediately="false"/>
+      </BindingProperties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="CheckBoxIsReadyHMTLFile">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x413;&#x43e;&#x442;&#x43e;&#x432;&#x43d;&#x43e;&#x441;&#x442;&#x44c; &#x43a; &#x43e;&#x431;&#x440;&#x430;&#x431;&#x43e;&#x442;&#x43a;&#x435;"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="LabelHTMLFileName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&lt;&lt; &#x438;&#x43c;&#x44f; &#x432;&#x44b;&#x445;&#x43e;&#x434;&#x43d;&#x43e;&#x433;&#x43e; &#x444;&#x430;&#x439;&#x43b;&#x430;&gt;&gt;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="CheckBoxIsRestrictOutSize">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x41e;&#x433;&#x440;&#x430;&#x43d;&#x438;&#x447;&#x438;&#x442;&#x44c; &#x440;&#x430;&#x437;&#x43c;&#x435;&#x440; &#x432;&#x44b;&#x445;&#x43e;&#x434;&#x43d;&#x43e;&#x433;&#x43e; &#x444;&#x430;&#x439;&#x43b;&#x430;"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

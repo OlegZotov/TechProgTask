@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 public class NewJFrame extends javax.swing.JFrame {
 
@@ -19,7 +21,7 @@ public class NewJFrame extends javax.swing.JFrame {
         return null;
     }
 
-    public BufferedReader tryOpenFile(File file) {
+    public BufferedReader openFileForRead(File file) {
         try {
             return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         } catch (FileNotFoundException ex) {
@@ -28,10 +30,19 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }
 
+    public BufferedWriter openFileForWrite(File file) {
+        try {
+            return new BufferedWriter(new FileWriter(file));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
     public Set<String> readDict(File dictFile) {
         Set<String> dictionary = new TreeSet<String>();
         BufferedReader bufReader;
-        if ((bufReader = tryOpenFile(dictFile)) != null) {
+        if ((bufReader = openFileForRead(dictFile)) != null) {
             String line;
             try {
                 while ((line = bufReader.readLine()) != null) {
@@ -39,6 +50,14 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                if (bufReader != null) {
+                    try {
+                        bufReader.close();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
             return dictionary;
         } else {
@@ -70,11 +89,17 @@ public class NewJFrame extends javax.swing.JFrame {
 
     public NewJFrame() {
         initComponents();
+        SpinnerModel model = new SpinnerNumberModel(100, //initial value
+                100, //min
+                10000, //max
+                100);
+        SpinnerSizeRestriction.setModel(model);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         LabelTextFileName = new javax.swing.JLabel();
         ButtonChooseDictFile = new javax.swing.JButton();
@@ -82,6 +107,11 @@ public class NewJFrame extends javax.swing.JFrame {
         CheckBoxIsReadyTextFile = new javax.swing.JCheckBox();
         CheckBoxIsReadyDictFile = new javax.swing.JCheckBox();
         ButtonChooseTextFile = new javax.swing.JButton();
+        ButtonChooseHTMLFile = new javax.swing.JButton();
+        SpinnerSizeRestriction = new javax.swing.JSpinner();
+        CheckBoxIsReadyHMTLFile = new javax.swing.JCheckBox();
+        LabelHTMLFileName = new javax.swing.JLabel();
+        CheckBoxIsRestrictOutSize = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,46 +139,88 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
+        ButtonChooseHTMLFile.setText("Выбрать выходной файл");
+        ButtonChooseHTMLFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonChooseHTMLFileActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, CheckBoxIsRestrictOutSize, org.jdesktop.beansbinding.ELProperty.create("${selected}"), SpinnerSizeRestriction, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        CheckBoxIsReadyHMTLFile.setText("Готовность к обработке");
+        CheckBoxIsReadyHMTLFile.setEnabled(false);
+
+        LabelHTMLFileName.setText("<< имя выходного файла>>");
+
+        CheckBoxIsRestrictOutSize.setText("Ограничить размер выходного файла");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(LabelTextFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CheckBoxIsReadyTextFile, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))
-                    .addComponent(ButtonChooseTextFile))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(ButtonChooseDictFile)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(CheckBoxIsReadyDictFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(LabelDictFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelTextFileName)
+                                .addGap(24, 24, 24)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CheckBoxIsReadyDictFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(LabelDictFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CheckBoxIsReadyTextFile, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ButtonChooseTextFile))
+                                .addGap(18, 18, 18)
+                                .addComponent(ButtonChooseDictFile))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(CheckBoxIsRestrictOutSize, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SpinnerSizeRestriction)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(CheckBoxIsReadyHMTLFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ButtonChooseHTMLFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelHTMLFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ButtonChooseDictFile)
-                    .addComponent(ButtonChooseTextFile))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ButtonChooseHTMLFile)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ButtonChooseDictFile)
+                            .addComponent(ButtonChooseTextFile))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelTextFileName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(CheckBoxIsReadyTextFile))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(LabelDictFileName)
+                                    .addComponent(LabelHTMLFileName))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(CheckBoxIsReadyDictFile)
+                                    .addComponent(CheckBoxIsReadyHMTLFile))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LabelTextFileName)
-                    .addComponent(LabelDictFileName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CheckBoxIsReadyTextFile)
-                    .addComponent(CheckBoxIsReadyDictFile))
-                .addContainerGap(78, Short.MAX_VALUE))
+                    .addComponent(CheckBoxIsRestrictOutSize)
+                    .addComponent(SpinnerSizeRestriction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -165,6 +237,10 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ButtonChooseDictFileActionPerformed
+
+    private void ButtonChooseHTMLFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseHTMLFileActionPerformed
+
+    }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -203,10 +279,16 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonChooseDictFile;
+    private javax.swing.JButton ButtonChooseHTMLFile;
     private javax.swing.JButton ButtonChooseTextFile;
     private javax.swing.JCheckBox CheckBoxIsReadyDictFile;
+    private javax.swing.JCheckBox CheckBoxIsReadyHMTLFile;
     private javax.swing.JCheckBox CheckBoxIsReadyTextFile;
+    private javax.swing.JCheckBox CheckBoxIsRestrictOutSize;
     private javax.swing.JLabel LabelDictFileName;
+    private javax.swing.JLabel LabelHTMLFileName;
     private javax.swing.JLabel LabelTextFileName;
+    private javax.swing.JSpinner SpinnerSizeRestriction;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
