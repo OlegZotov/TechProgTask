@@ -113,6 +113,11 @@ public class NewJFrame extends javax.swing.JFrame {
         return res.toString();
     }
 
+    /**
+     * Основная обработка исходного текстового файла в HTML.
+     * Открываем потоки на чтение и запись. 
+     * Построчно счтываем, обрабатываем строку функцией processOneString(String) и записываем в выходной файл.
+     */
     public void mainProcess() {
         BufferedReader bufReader = openFileForRead(textFile);
         BufferedWriter bufWriter = openFileForWrite(HTMLFile);
@@ -146,6 +151,15 @@ public class NewJFrame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Основная обработка исходного текстового файла в HTML файл длиной не более sizeRestriction,
+     * после достижения этой длины выбирается другой выходной файл.
+     * Открываем потоки на чтение и запись. 
+     * Построчно счтываем, обрабатываем строку функцией processOneString(String) и записываем в выходной файл.
+     * После достижения допустимой длины закрывается поток на запись, выбирается новый выходной файл,
+     * снова открывается поток на запись и дальше процесс повторяется.
+     * @param sizeRestriction максимально допустимый размер выходного файла.
+     */
     public void mainProcess(int sizeRestriction) {
         BufferedReader bufReader = openFileForRead(textFile);
         BufferedWriter bufWriter = openFileForWrite(HTMLFile);
