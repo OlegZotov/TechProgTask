@@ -454,6 +454,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                 closeReadStream(bufReader);
                 closeWriteStream(bufWriter);
                 NewJFrame.this.changeEnable();
+                progress = 0;
                 SwingUtilities.invokeLater( NewJFrame.this );
             }
         }
