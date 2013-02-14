@@ -50,7 +50,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
            Task.stop();
            isStopped = false;
            changeEnable();
-           JOptionPane.showMessageDialog(null, "Stopped by user");
+           JOptionPane.showMessageDialog(null, "Прервано пользователем.", "Прервано", JOptionPane.WARNING_MESSAGE);
         }
     }
     
@@ -203,7 +203,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ButtonStop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ProgressBarByBytes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -212,7 +212,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonChooseTextFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseTextFileActionPerformed
-        if ((textFile = Task.selectFileForOpen()) != null) {
+        if ((textFile = Task.selectFile("open")) != null) {
             LabelTextFileName.setText(textFile.getName());
             CheckBoxIsReadyTextFile.setSelected(true);
         }
@@ -220,7 +220,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
 
     private void ButtonChooseDictFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseDictFileActionPerformed
         File dictFile;
-        if ((dictFile = Task.selectFileForOpen()) != null) {
+        if ((dictFile = Task.selectFile("open")) != null) {
             Task.readDict(dictFile);
             if (Task.dict != null) {
                 LabelDictFileName.setText(dictFile.getName());
@@ -230,17 +230,23 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
     }//GEN-LAST:event_ButtonChooseDictFileActionPerformed
 
     private void ButtonChooseHTMLFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseHTMLFileActionPerformed
-        if ((HTMLFile = Task.selectFileForSaving()) != null) {
+        if ((HTMLFile = Task.selectFile("save")) != null) {
             LabelHTMLFileName.setText(HTMLFile.getName());
             CheckBoxIsReadyHTMLFile.setSelected(true);
         }
     }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
 
     private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
+        if(!(CheckBoxIsReadyHTMLFile.isSelected() && 
+                CheckBoxIsReadyTextFile.isSelected()&& 
+                CheckBoxIsReadyDictFile.isSelected())){
+            JOptionPane.showMessageDialog(null, "Ошибка! Указаны не все файлы.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         sizeRestriction = Integer.valueOf(SpinnerSizeRestriction.getValue().toString());
         if (CheckBoxIsRestrictOutSize.isSelected()) {
             if(sizeRestriction < 10){
-                JOptionPane.showMessageDialog(null, "Error! Set Restriction Size > 9");
+                JOptionPane.showMessageDialog(null, "Ошибка! Ограничение должно быть больше 9.", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -312,18 +318,9 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
             }
         }
 
-        public File selectFileForOpen() {
+        public File selectFile(String mode) {
             JFileChooser FileChooserOpen = new JFileChooser("/home/pavel/workspace/TechProgTask/FilesForTests");
-            int ret = FileChooserOpen.showOpenDialog(null);
-            if (ret == JFileChooser.APPROVE_OPTION) {
-                return FileChooserOpen.getSelectedFile();
-            }
-            return null;
-        }
-
-        public File selectFileForSaving() {
-            JFileChooser FileChooserOpen = new JFileChooser("/home/pavel/workspace/TechProgTask/FilesForTests");
-            int ret = FileChooserOpen.showSaveDialog(null);
+            int ret = (mode.equalsIgnoreCase("save")) ? FileChooserOpen.showSaveDialog(null) : FileChooserOpen.showOpenDialog(null);
             if (ret == JFileChooser.APPROVE_OPTION) {
                 return FileChooserOpen.getSelectedFile();
             }
@@ -436,7 +433,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                         bufWriter.write("</html>\n</body>\n");
                         closeWriteStream(bufWriter);
                         HTMLFile = null;
-                        if ((HTMLFile = selectFileForSaving()) != null) {
+                        if ((HTMLFile = selectFile("save")) != null) {
                             bufWriter = openFileForWrite(HTMLFile);
                             bufWriter.write("<html>\n<body>\n");
                         }
@@ -446,7 +443,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                     progress = 100;
                     SwingUtilities.invokeLater( NewJFrame.this );
                     bufWriter.write("</html>\n</body>\n");
-                    JOptionPane.showMessageDialog(null, "Done!");
+                    JOptionPane.showMessageDialog(null, "Готово!", "Успех", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
@@ -454,6 +451,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                 closeReadStream(bufReader);
                 closeWriteStream(bufWriter);
                 NewJFrame.this.changeEnable();
+                progress = 0;
                 SwingUtilities.invokeLater( NewJFrame.this );
             }
         }
