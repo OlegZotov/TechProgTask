@@ -22,39 +22,49 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="CheckBoxIsRestrictOutSize" min="-2" pref="303" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="SpinnerSizeRestriction" min="-2" pref="123" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="LabelTextFileName" max="32767" attributes="0"/>
-                          <Component id="CheckBoxIsReadyTextFile" max="32767" attributes="0"/>
-                          <Component id="ButtonChooseTextFile" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="ButtonChooseDictFile" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="CheckBoxIsReadyDictFile" max="32767" attributes="0"/>
-                                  <Component id="LabelDictFileName" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="CheckBoxIsRestrictOutSize" min="-2" pref="303" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="SpinnerSizeRestriction" min="-2" pref="123" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="LabelTextFileName" max="32767" attributes="0"/>
+                                  <Component id="CheckBoxIsReadyTextFile" max="32767" attributes="0"/>
+                                  <Component id="ButtonChooseTextFile" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="ButtonChooseDictFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="CheckBoxIsReadyDictFile" max="32767" attributes="0"/>
+                                          <Component id="LabelDictFileName" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="CheckBoxIsReadyHTMLFile" max="32767" attributes="0"/>
+                          <Component id="ButtonChooseHTMLFile" alignment="0" max="32767" attributes="0"/>
+                          <Component id="LabelHTMLFileName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="ButtonStartMainProcess" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="CheckBoxIsReadyHTMLFile" max="32767" attributes="0"/>
-                  <Component id="ButtonChooseHTMLFile" alignment="0" max="32767" attributes="0"/>
-                  <Component id="LabelHTMLFileName" alignment="0" max="32767" attributes="0"/>
-                  <Component id="ButtonStartMainProcess" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="ProgressBarByBytes" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="ButtonStop" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -96,7 +106,12 @@
                   <Component id="SpinnerSizeRestriction" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ButtonStartMainProcess" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="177" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="ButtonStop" max="32767" attributes="0"/>
+                  <Component id="ProgressBarByBytes" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace pref="135" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -175,6 +190,16 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonStartMainProcessActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JProgressBar" name="ProgressBarByBytes">
+    </Component>
+    <Component class="javax.swing.JButton" name="ButtonStop">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x41f;&#x440;&#x435;&#x440;&#x432;&#x430;&#x442;&#x44c;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ButtonStopActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
