@@ -1,206 +1,43 @@
 package Jform;
 
 import java.io.*;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 
-public class NewJFrame extends javax.swing.JFrame {
-
-    Set<String> dict = new TreeSet();//{"a", "strong", "kill", ""};
+public class NewJFrame extends javax.swing.JFrame implements Runnable{
+    GroupTask Task;
     File textFile;
     File HTMLFile;
-
-    public File selectFileForOpen() {
-        JFileChooser FileChooserOpen = new JFileChooser("/home/oleg/Git/TechProgTask/FilesForTests");
-        int ret = FileChooserOpen.showOpenDialog(this);
-        if (ret == JFileChooser.APPROVE_OPTION) {
-            return FileChooserOpen.getSelectedFile();
-        }
-        return null;
-    }
-
-    public File selectFileForSaving() {
-        JFileChooser FileChooserOpen = new JFileChooser("/home/oleg/Git/TechProgTask/FilesForTests");
-        int ret = FileChooserOpen.showSaveDialog(this);
-        if (ret == JFileChooser.APPROVE_OPTION) {
-            return FileChooserOpen.getSelectedFile();
-        }
-        return null;
-    }
-
-    public BufferedReader openFileForRead(File file) {
-        try {
-            return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
-
-    public BufferedWriter openFileForWrite(File file) {
-        try {
-            return new BufferedWriter(new FileWriter(file));
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
-
-    public void closeReadStream(BufferedReader bufReader) {
-        if (bufReader != null) {
-            try {
-                bufReader.close();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    public void closeWriteStream(BufferedWriter bufWriter) {
-        if (bufWriter != null) {
-            try {
-                bufWriter.close();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    public Set<String> readDict(File dictFile) {
-        Set<String> dictionary = new TreeSet<String>();
-        BufferedReader bufReader;
-        if ((bufReader = openFileForRead(dictFile)) != null) {
-            String line;
-            try {
-                while ((line = bufReader.readLine()) != null) {
-                    dictionary.add(line);
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                closeReadStream(bufReader);
-            }
-            return dictionary;
-        } else {
-            return null;
-        }
-    }
-
-    public String processOneString(String str) {
-        final int SIZE_OF_CHANGING = 7;// 7 = <b></b>.length()
-        StringBuilder res = new StringBuilder(str);
-        for (String wordFromDict : dict) {
-            if (wordFromDict.length() > str.length()) {
-                continue;
-            }
-            for (int replaceIndex = res.indexOf(wordFromDict, 0); replaceIndex != -1; replaceIndex = res.indexOf(wordFromDict, replaceIndex + SIZE_OF_CHANGING)) {
-                String separators = "!@#$%^&*():;\"\' ,\\./[]{}|-+=";
-                int endWordIndex = replaceIndex + wordFromDict.length();
-                if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1)) {
-                    continue;
-                }
-                StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + SIZE_OF_CHANGING);
-                replacedStr.append("<b>");
-                replacedStr.append(wordFromDict);
-                replacedStr.append("</b>");
-                res.replace(replaceIndex, endWordIndex, replacedStr.toString());
-            }
-        }
-        return res.toString();
-    }
-
-    /**
-     * Основная обработка исходного текстового файла в HTML.
-     * Открываем потоки на чтение и запись. 
-     * Построчно счтываем, обрабатываем строку функцией processOneString(String) и записываем в выходной файл.
-     */
-    public void mainProcess() {
-        BufferedReader bufReader = openFileForRead(textFile);
-        BufferedWriter bufWriter = openFileForWrite(HTMLFile);
-        try {
-            bufWriter.write("<html>\n<body>\n");
-            String line;
-            while ((line = bufReader.readLine()) != null) {
-                line = processOneString(line);
-                bufWriter.write(line);
-                bufWriter.newLine();
-            }
-            bufWriter.write("</html>\n</body>\n");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            if (bufReader != null) {
-                try {
-                    bufReader.close();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            if (bufWriter != null) {
-                try {
-                    bufWriter.close();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Основная обработка исходного текстового файла в HTML файл длиной не более sizeRestriction,
-     * после достижения этой длины выбирается другой выходной файл.
-     * Открываем потоки на чтение и запись. 
-     * Построчно счтываем, обрабатываем строку функцией processOneString(String) и записываем в выходной файл.
-     * После достижения допустимой длины закрывается поток на запись, выбирается новый выходной файл,
-     * снова открывается поток на запись и дальше процесс повторяется.
-     * @param sizeRestriction максимально допустимый размер выходного файла.
-     */
-    public void mainProcess(int sizeRestriction) {
-        BufferedReader bufReader = openFileForRead(textFile);
-        BufferedWriter bufWriter = openFileForWrite(HTMLFile);
-        int counter = 0;
-        try {
-            bufWriter.write("<html>\n<body>\n");
-            String line;
-            while ((line = bufReader.readLine()) != null) {
-                line = processOneString(line);
-                bufWriter.write(line);
-                bufWriter.newLine();
-                counter++;
-                if (counter >= sizeRestriction) {
-                    counter = 0;
-                    bufWriter.write("</html>\n</body>\n");
-                    closeWriteStream(bufWriter);
-                    HTMLFile = null;
-                    if ((HTMLFile = selectFileForSaving()) != null) {
-                        bufWriter = openFileForWrite(HTMLFile);
-                        bufWriter.write("<html>\n<body>\n");
-                    }
-                }
-            }
-            bufWriter.write("</html>\n</body>\n");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            closeReadStream(bufReader);
-            closeWriteStream(bufWriter);
-        }
-    }
-
+    int sizeRestriction;
+    int progress = 10;
+    
     public NewJFrame() {
         initComponents();
-        SpinnerModel model = new SpinnerNumberModel(10, //initial value
-                10, //min
+        SpinnerModel model = new SpinnerNumberModel(0, //initial value
+                0, //min
                 100000, //max
-                10);
+                100);
         SpinnerSizeRestriction.setModel(model);
+        
+        ProgressBarByBytes.setStringPainted(true);
+        ProgressBarByBytes.setValue(0);
+        
+        Task = new GroupTask();
     }
-
+    
+    public void run(){
+        ProgressBarByBytes.setValue(progress);
+        if(progress == 100){
+            JOptionPane.showMessageDialog(null, "Done!");
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -359,7 +196,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonChooseTextFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseTextFileActionPerformed
-        if ((textFile = selectFileForOpen()) != null) {
+        if ((textFile = Task.selectFileForOpen()) != null) {
             LabelTextFileName.setText(textFile.getName());
             CheckBoxIsReadyTextFile.setSelected(true);
         }
@@ -367,8 +204,9 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void ButtonChooseDictFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseDictFileActionPerformed
         File dictFile;
-        if ((dictFile = selectFileForOpen()) != null) {
-            if ((dict = readDict(dictFile)) != null) {
+        if ((dictFile = Task.selectFileForOpen()) != null) {
+            Task.readDict(dictFile);
+            if (Task.dict != null) {
                 LabelDictFileName.setText(dictFile.getName());
                 CheckBoxIsReadyDictFile.setSelected(true);
             }
@@ -376,7 +214,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonChooseDictFileActionPerformed
 
     private void ButtonChooseHTMLFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChooseHTMLFileActionPerformed
-        if ((HTMLFile = selectFileForSaving()) != null) {
+        if ((HTMLFile = Task.selectFileForSaving()) != null) {
             LabelHTMLFileName.setText(HTMLFile.getName());
             CheckBoxIsReadyHTMLFile.setSelected(true);
         }
@@ -384,12 +222,15 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
         ButtonStop.setEnabled(true);
+        sizeRestriction = Integer.valueOf(SpinnerSizeRestriction.getValue().toString());
         if (CheckBoxIsRestrictOutSize.isSelected()) {
-            mainProcess(Integer.valueOf(SpinnerSizeRestriction.getValue().toString()));
+            if(sizeRestriction < 10){
+                JOptionPane.showMessageDialog(null, "Error! Set Restriction Size > 9");
+                return;
+            }
         } else {
-            mainProcess();
+            Task.start();
         }
-        JOptionPane.showMessageDialog(null, "done!");
     }//GEN-LAST:event_ButtonStartMainProcessActionPerformed
 
     private void ButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStopActionPerformed
@@ -430,6 +271,169 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    public class GroupTask extends Thread {
+        Set<String> dict = new TreeSet();//{"a", "strong", "kill", ""};
+        private long curProgress = 0;
+        
+        private BufferedReader openFileForRead(File file) {
+            try {
+                return new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+        }
+
+        private BufferedWriter openFileForWrite(File file) {
+            try {
+                return new BufferedWriter(new FileWriter(file));
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "FileNotFoundException", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+        }
+
+        public File selectFileForOpen() {
+            JFileChooser FileChooserOpen = new JFileChooser("/home/pavel/workspace/TechProgTask/FilesForTests");
+            int ret = FileChooserOpen.showOpenDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                return FileChooserOpen.getSelectedFile();
+            }
+            return null;
+        }
+
+        public File selectFileForSaving() {
+            JFileChooser FileChooserOpen = new JFileChooser("/home/pavel/workspace/TechProgTask/FilesForTests");
+            int ret = FileChooserOpen.showSaveDialog(null);
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                return FileChooserOpen.getSelectedFile();
+            }
+            return null;
+        }
+
+        private void closeReadStream(BufferedReader bufReader) {
+            if (bufReader != null) {
+                try {
+                    bufReader.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
+        private void closeWriteStream(BufferedWriter bufWriter) {
+            if (bufWriter != null) {
+                try {
+                    bufWriter.close();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
+        public void readDict(File dictFile) {
+            BufferedReader bufReader;
+            if ((bufReader = openFileForRead(dictFile)) != null) {
+                String line;
+                try {
+                    while ((line = bufReader.readLine()) != null) {
+                        dict.add(line);
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    closeReadStream(bufReader);
+                }
+            } else {
+                dict = null;
+            }
+        }
+
+        private String processOneString(String str) {
+            final int SIZE_OF_CHANGING = 7;// 7 = <b></b>.length()
+            StringBuilder res = new StringBuilder(str);
+            for (String wordFromDict : dict) {
+                if (wordFromDict.length() > str.length()) {
+                    continue;
+                }
+                for (int replaceIndex = res.indexOf(wordFromDict, 0); replaceIndex != -1; replaceIndex = res.indexOf(wordFromDict, replaceIndex + SIZE_OF_CHANGING)) {
+                    String separators = "!@#$%^&*():;\"\' ,\\./[]{}|-+=";
+                    int endWordIndex = replaceIndex + wordFromDict.length();
+                    if (endWordIndex != res.length() && (separators.indexOf(res.charAt(endWordIndex)) == -1)) {
+                        continue;
+                    }
+                    StringBuilder replacedStr = new StringBuilder(wordFromDict.length() + SIZE_OF_CHANGING);
+                    replacedStr.append("<b>");
+                    replacedStr.append(wordFromDict);
+                    replacedStr.append("</b>");
+                    res.replace(replaceIndex, endWordIndex, replacedStr.toString());
+                }
+            }
+            return res.toString();
+        }
+
+        /**
+         * Основная обработка исходного текстового файла в HTML файл длиной не более sizeRestriction,
+         * после достижения этой длины выбирается другой выходной файл.
+         * Открываем потоки на чтение и запись. 
+         * Построчно счтываем, обрабатываем строку функцией processOneString(String) и записываем в выходной файл.
+         * После достижения допустимой длины закрывается поток на запись, выбирается новый выходной файл,
+         * снова открывается поток на запись и дальше процесс повторяется.
+         * @param sizeRestriction максимально допустимый размер выходного файла.
+         */
+        
+        public int currentProgress(long length, String cur){
+            curProgress += cur.getBytes().length * 100;
+            progress = (int) (curProgress/length);
+            return progress;
+        }
+        
+        @Override
+        public void run() {
+            BufferedReader bufReader = openFileForRead(textFile);
+            BufferedWriter bufWriter = openFileForWrite(HTMLFile);
+            long fullLength = textFile.length();
+            int counter = (sizeRestriction > 0) ? 0 : -1;
+            try {
+                bufWriter.write("<html>\n<body>\n");
+                String line;
+                while ((line = bufReader.readLine()) != null) {
+                    progress = currentProgress(fullLength, line);
+                    line = "<p>" + processOneString(line) + "</p>";
+                    bufWriter.write(line);
+                    bufWriter.newLine();
+                    SwingUtilities.invokeLater( NewJFrame.this );
+                    if(counter == -1){
+                        continue;
+                    }
+                    counter++;
+                    if (counter >= sizeRestriction) {
+                        counter = 0;
+                        bufWriter.write("</html>\n</body>\n");
+                        closeWriteStream(bufWriter);
+                        HTMLFile = null;
+                        if ((HTMLFile = selectFileForSaving()) != null) {
+                            bufWriter = openFileForWrite(HTMLFile);
+                            bufWriter.write("<html>\n<body>\n");
+                        }
+                    }
+                }
+                if(progress != 100){
+                    progress = 100;
+                    SwingUtilities.invokeLater( NewJFrame.this );
+                }
+                bufWriter.write("</html>\n</body>\n");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                closeReadStream(bufReader);
+                closeWriteStream(bufWriter);
+            }
+        }
+    }
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonChooseDictFile;
     private javax.swing.JButton ButtonChooseHTMLFile;
