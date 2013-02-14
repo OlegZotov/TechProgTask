@@ -111,7 +111,7 @@
                   <Component id="ButtonStop" max="32767" attributes="0"/>
                   <Component id="ProgressBarByBytes" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="135" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
