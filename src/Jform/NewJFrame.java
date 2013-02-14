@@ -1,7 +1,6 @@
 package Jform;
 
 import java.io.*;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JFileChooser;
@@ -15,7 +14,8 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
     File textFile;
     File HTMLFile;
     int sizeRestriction;
-    int progress = 10;
+    int progress = 0;
+    boolean isStopped = false;
     
     public NewJFrame() {
         initComponents();
@@ -28,13 +28,29 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
         ProgressBarByBytes.setStringPainted(true);
         ProgressBarByBytes.setValue(0);
         
+        ButtonStop.setEnabled(false);
+        
         Task = new GroupTask();
     }
     
+    private void changeEnable(){
+        ButtonChooseDictFile.setEnabled(!ButtonChooseDictFile.isEnabled());
+        ButtonChooseHTMLFile.setEnabled(!ButtonChooseHTMLFile.isEnabled());
+        ButtonChooseTextFile.setEnabled(!ButtonChooseTextFile.isEnabled());
+        ButtonStartMainProcess.setEnabled(!ButtonStartMainProcess.isEnabled());
+        CheckBoxIsRestrictOutSize.setEnabled(!CheckBoxIsRestrictOutSize.isEnabled());
+        SpinnerSizeRestriction.setEnabled(false);
+        ButtonStop.setEnabled(!ButtonStop.isEnabled());
+    }
+    
+    @Override
     public void run(){
         ProgressBarByBytes.setValue(progress);
-        if(progress == 100){
-            JOptionPane.showMessageDialog(null, "Done!");
+        if(isStopped){
+           Task.stop();
+           isStopped = false;
+           changeEnable();
+           JOptionPane.showMessageDialog(null, "Stopped by user");
         }
     }
     
@@ -221,20 +237,22 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
     }//GEN-LAST:event_ButtonChooseHTMLFileActionPerformed
 
     private void ButtonStartMainProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStartMainProcessActionPerformed
-        ButtonStop.setEnabled(true);
         sizeRestriction = Integer.valueOf(SpinnerSizeRestriction.getValue().toString());
         if (CheckBoxIsRestrictOutSize.isSelected()) {
             if(sizeRestriction < 10){
                 JOptionPane.showMessageDialog(null, "Error! Set Restriction Size > 9");
                 return;
             }
-        } else {
-            Task.start();
         }
+        changeEnable();
+        isStopped = false;
+        Task = new GroupTask();
+        Task.start();
     }//GEN-LAST:event_ButtonStartMainProcessActionPerformed
 
-    private void ButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonStopActionPerformed
-    }//GEN-LAST:event_ButtonStopActionPerformed
+    private void ButtonStopActionPerformed(java.awt.event.ActionEvent evt) {
+        isStopped = true;
+    }
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -393,12 +411,17 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
         public void run() {
             BufferedReader bufReader = openFileForRead(textFile);
             BufferedWriter bufWriter = openFileForWrite(HTMLFile);
+            progress = 0;
+            SwingUtilities.invokeLater( NewJFrame.this );
             long fullLength = textFile.length();
             int counter = (sizeRestriction > 0) ? 0 : -1;
             try {
                 bufWriter.write("<html>\n<body>\n");
                 String line;
                 while ((line = bufReader.readLine()) != null) {
+                    if(isStopped){
+                        break;
+                    }
                     progress = currentProgress(fullLength, line);
                     line = "<p>" + processOneString(line) + "</p>";
                     bufWriter.write(line);
@@ -419,16 +442,19 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
                         }
                     }
                 }
-                if(progress != 100){
+                if(!isStopped){
                     progress = 100;
                     SwingUtilities.invokeLater( NewJFrame.this );
+                    bufWriter.write("</html>\n</body>\n");
+                    JOptionPane.showMessageDialog(null, "Done!");
                 }
-                bufWriter.write("</html>\n</body>\n");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "IOException", JOptionPane.ERROR_MESSAGE);
             } finally {
                 closeReadStream(bufReader);
                 closeWriteStream(bufWriter);
+                NewJFrame.this.changeEnable();
+                SwingUtilities.invokeLater( NewJFrame.this );
             }
         }
     }
