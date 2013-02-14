@@ -319,7 +319,7 @@ public class NewJFrame extends javax.swing.JFrame implements Runnable{
         }
 
         public File selectFile(String mode) {
-            JFileChooser FileChooserOpen = new JFileChooser("/home/pavel/workspace/TechProgTask/FilesForTests");
+            JFileChooser FileChooserOpen = new JFileChooser("FilesForTests");
             int ret = (mode.equalsIgnoreCase("save")) ? FileChooserOpen.showSaveDialog(null) : FileChooserOpen.showOpenDialog(null);
             if (ret == JFileChooser.APPROVE_OPTION) {
                 return FileChooserOpen.getSelectedFile();
